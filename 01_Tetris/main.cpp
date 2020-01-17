@@ -35,6 +35,8 @@ int main()
   Sprite s(t1), background(t2), frame(t3);
 
   int colorNum = 1;
+  int dx = 0;
+  bool rotate = 0;
 
   while (window.isOpen())
   {
@@ -43,14 +45,33 @@ int main()
     {
       if (e.type == Event::Closed)
         window.close();
+
+      if (e.type == Event::KeyPressed)
+      {
+        if (e.key.code == Keyboard::Up)
+          rotate = true;
+        else if (e.key.code == Keyboard::Left)
+          dx = -1;
+        else if (e.key.code == Keyboard::Right)
+          dx = 1;
+      }
+    }
+
+    //// <- Move -> ///
+    for (int i = 0; i < 4; i++)
+    {
+      a[i].x += dx;
     }
 
     int n = 3;
-    for (int i = 0; i < 4; i++)
-    {
-      a[i].x = figures[n][i] % 2;
-      a[i].y = figures[n][i] / 2;
-    }
+    // TODO
+    if (a[0].x == 0)
+      for (int i = 0; i < 4; i++)
+      {
+        a[i].x = figures[n][i] % 2;
+        a[i].y = figures[n][i] / 2;
+      }
+    dx = 0;
 
     /////////draw//////////
     window.clear(Color::White);
