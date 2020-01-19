@@ -63,8 +63,22 @@ int main()
       a[i].x += dx;
     }
 
+    //////Rotate//////
+    if (rotate)
+    {
+      //center of rotation
+      Point p = a[1];
+      // TODO
+      for (int i = 0; i < 4; i++)
+      {
+        int x = a[i].y - p.y;
+        int y = a[i].x - p.x;
+        a[i].x = p.x - x;
+        a[i].y = p.y + y;
+      }
+    }
+
     int n = 3;
-    // TODO
     if (a[0].x == 0)
       for (int i = 0; i < 4; i++)
       {
@@ -72,6 +86,7 @@ int main()
         a[i].y = figures[n][i] / 2;
       }
     dx = 0;
+    rotate = 0;
 
     /////////draw//////////
     window.clear(Color::White);
