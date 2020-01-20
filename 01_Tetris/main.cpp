@@ -37,9 +37,16 @@ int main()
   int colorNum = 1;
   int dx = 0;
   bool rotate = 0;
+  float timer = 0, delay = 0.3;
+
+  Clock clock;
 
   while (window.isOpen())
   {
+    float time = clock.getElapsedTime().asSeconds();
+    clock.restart();
+    timer += time;
+
     Event e;
     while (window.pollEvent(e))
     {
@@ -68,7 +75,7 @@ int main()
     {
       //center of rotation
       Point p = a[1];
-      // TODO
+      // TODO: I don't no how
       for (int i = 0; i < 4; i++)
       {
         int x = a[i].y - p.y;
@@ -76,6 +83,17 @@ int main()
         a[i].x = p.x - x;
         a[i].y = p.y + y;
       }
+    }
+
+    ///////Tick//////
+    if (timer > delay)
+    {
+      for (int i = 0; i < 4; i++)
+      {
+        a[i].y += 1;
+      }
+
+      timer = 0;
     }
 
     int n = 3;
