@@ -23,8 +23,22 @@ int figures[7][4] =
         2, 3, 4, 5, // O
 };
 
+bool check()
+{
+  for (int i = 0; i < 4; i++)
+    // The left-hand, right-hand and bottom-hand edge.
+    if (a[i].x < 0 || a[i].x >= N || a[i].y >= M)
+      return 0;
+    // If there is tile.
+    else if (field[a[i].y][a[i].x])
+      return 0;
+
+  return 1;
+};
+
 int main()
 {
+  srand(time(0));
   RenderWindow window(VideoMode(320, 480), "The Game!");
 
   Texture t1, t2, t3;
@@ -64,16 +78,22 @@ int main()
       }
     }
 
-    //// <- Move -> ///
+    // Move
     for (int i = 0; i < 4; i++)
     {
+      // 이동하기전에 원래 위치를 b에다가 저장
+      b[i] = a[i];
       a[i].x += dx;
     }
+    // 막다른 길이라면 원복
+    if (!check())
+      for (int i = 0; i < 4; i++)
+        a[i] = b[i];
 
-    //////Rotate//////
+    // Rotate
     if (rotate)
     {
-      //center of rotation
+      // Center of rotation
       Point p = a[1];
       // TODO: I don't no how
       for (int i = 0; i < 4; i++)
@@ -83,33 +103,64 @@ int main()
         a[i].x = p.x - x;
         a[i].y = p.y + y;
       }
+      // 회전하려고 하는데 막다른 길이면 원복
+      if (!check())
+        for (int i = 0; i < 4; i++)
+          a[i] = b[i];
     }
 
-    ///////Tick//////
+    // Tick
     if (timer > delay)
     {
       for (int i = 0; i < 4; i++)
       {
+        b[i] = a[i];
         a[i].y += 1;
+      }
+
+      if (!check())
+      {
+        // 막다른 길이라면 컬러를 장소에 저장함
+        for (int i = 0; i < 4; i++)
+          field[b[i].y][b[i].x] = colorNum;
+
+        // Random color 컬러 변경
+        colorNum = 1 + rand() % 7;
+        // Random shape 모양 변경
+        int n = rand() % 7;
+        for (int i = 0; i < 4; i++)
+        {
+          a[i].x = figures[n][i] % 2;
+          a[i].y = figures[n][i] / 2;
+        }
       }
 
       timer = 0;
     }
 
-    int n = 3;
-    if (a[0].x == 0)
-      for (int i = 0; i < 4; i++)
-      {
-        a[i].x = figures[n][i] % 2;
-        a[i].y = figures[n][i] / 2;
-      }
     dx = 0;
     rotate = 0;
 
-    /////////draw//////////
+    // Draw
     window.clear(Color::White);
     window.draw(background);
 
+    // 쌓여있는 타일 그려줌
+    for (int i = 0; i < M; i++)
+      for (int j = 0; j < N; j++)
+      {
+        // 색이 저장되어있지 않다면 그리지 않음
+        if (field[i][j] == 0)
+          continue;
+        // 저장되어 있는 색을 가져옴
+        s.setTextureRect(IntRect(field[i][j] * 18, 0, 18, 18));
+        // 그려줌
+        s.setPosition(j * 18, i * 18);
+        s.move(28, 31); //offset
+        window.draw(s);
+      }
+
+    // 새로운 타일 그려줌
     for (int i = 0; i < 4; i++)
     {
       /**
