@@ -1,6 +1,8 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <time.h>
 using namespace sf;
+using namespace std;
 
 const int M = 20;
 const int N = 10;
@@ -78,6 +80,9 @@ int main()
       }
     }
 
+    if (e.key.code == Keyboard::Down)
+      delay = 0.05;
+
     // Move
     for (int i = 0; i < 4; i++)
     {
@@ -140,6 +145,7 @@ int main()
 
     dx = 0;
     rotate = 0;
+    delay = 0.3;
 
     // Draw
     window.clear(Color::White);
