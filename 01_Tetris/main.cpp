@@ -77,11 +77,10 @@ int main()
           dx = -1;
         else if (e.key.code == Keyboard::Right)
           dx = 1;
+        else if (e.key.code == Keyboard::Down)
+          delay = 0.05;
       }
     }
-
-    if (e.key.code == Keyboard::Down)
-      delay = 0.05;
 
     // Move
     for (int i = 0; i < 4; i++)
