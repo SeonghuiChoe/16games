@@ -1,4 +1,5 @@
 #include <iostream>
+// cout << "?" << endl;
 #include <SFML/Graphics.hpp>
 #include <time.h>
 using namespace sf;
@@ -140,6 +141,28 @@ int main()
       }
 
       timer = 0;
+    }
+
+    ///////check lines//////////
+    int k = M - 1;
+    // 19부터 1까지
+    for (int i = M - 1; i > 0; i--)
+    {
+      int count = 0;
+      // 0부터 9까지
+      for (int j = 0; j < N; j++)
+      {
+        // 타일이 있으면
+        if (field[i][j])
+          count++;
+        // 타일이 없다면
+        field[k][j] = field[i][j];
+      }
+      // 한줄이 완성이 안되면 이동이 없도록 k를 감소시킨다.
+      // 한줄이 완성되면 k를 감소하지 않기때문에 19번째 줄이 18번째 타일로 채워진다.
+      // 한줄이 완성된 만큼 k와의 차이가 나면서 타일들을 아래로 이동시킨다.
+      if (count < N)
+        k--;
     }
 
     dx = 0;
