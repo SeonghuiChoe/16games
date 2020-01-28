@@ -8,6 +8,9 @@ struct point
 
 int main()
 {
+  // random의 seed를 위함
+  srand(time(0));
+
   RenderWindow app(VideoMode(400, 533), "Doodle Game!");
 
   Texture t1, t2, t3;
@@ -16,6 +19,15 @@ int main()
   t3.loadFromFile("images/doodle.png");
 
   Sprite sBackground(t1), sPlat(t2), sPers(t3);
+
+  point plat[20];
+
+  for (int i = 0; i < 10; i++)
+  {
+    // rand() % M을 하면 0~(M-1)까지의 수가 생성
+    plat[i].x = rand() % 400;
+    plat[i].y = rand() % 533;
+  }
 
   while (app.isOpen())
   {
@@ -28,6 +40,11 @@ int main()
 
     app.draw(sBackground);
     app.draw(sPers);
+    for (int i = 0; i < 10; i++)
+    {
+      sPlat.setPosition(plat[i].x, plat[i].y);
+      app.draw(sPlat);
+    }
     app.display();
   }
   return 0;
