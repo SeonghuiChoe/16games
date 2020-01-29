@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <time.h>
 using namespace sf;
 
 struct point
@@ -12,6 +13,7 @@ int main()
   srand(time(0));
 
   RenderWindow app(VideoMode(400, 533), "Doodle Game!");
+  app.setFramerateLimit(60);
 
   Texture t1, t2, t3;
   t1.loadFromFile("images/background.png");
@@ -30,6 +32,7 @@ int main()
   }
 
   int x = 100, y = 100, h = 200;
+  float dx = 0, dy = 0;
 
   while (app.isOpen())
   {
@@ -43,6 +46,11 @@ int main()
       else if (e.key.code == Keyboard::Left)
         x -= 3;
     }
+
+    dy += 0.2;
+    y += dy;
+    if (y > 500)
+      dy = -10;
 
     sPers.setPosition(x, y);
 
