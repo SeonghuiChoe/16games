@@ -29,6 +29,8 @@ int main()
     plat[i].y = rand() % 533;
   }
 
+  int x = 100, y = 100, h = 200;
+
   while (app.isOpen())
   {
     Event e;
@@ -36,7 +38,13 @@ int main()
     {
       if (e.type == Event::Closed)
         app.close();
+      else if (e.key.code == Keyboard::Right)
+        x += 3;
+      else if (e.key.code == Keyboard::Left)
+        x -= 3;
     }
+
+    sPers.setPosition(x, y);
 
     app.draw(sBackground);
     app.draw(sPers);

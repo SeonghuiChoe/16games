@@ -1,4 +1,3 @@
-#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <time.h>
 using namespace sf;
@@ -40,6 +39,7 @@ bool check()
 
 int main()
 {
+  // random의 seed를 위함
   srand(time(0));
   RenderWindow window(VideoMode(320, 480), "The Game!");
 
