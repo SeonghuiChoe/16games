@@ -52,6 +52,11 @@ int main()
     if (y > 500)
       dy = -10;
 
+    for (int i = 0; i < 10; i++)
+      if ((x + 50 > plat[i].x) && (x + 20 < plat[i].x + 68) &&
+          (y + 70 > plat[i].y) && (y + 70 < plat[i].y + 14) && (dy > 0))
+        dy = -10;
+
     sPers.setPosition(x, y);
 
     app.draw(sBackground);
