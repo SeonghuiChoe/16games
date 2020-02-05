@@ -15,6 +15,7 @@ int main()
 
   Sprite sBackground(t2), sBall(t3), sPaddle(t4);
   sPaddle.setPosition(300, 440);
+  sBall.setPosition(300, 300);
 
   Sprite block[1000];
 
@@ -27,6 +28,7 @@ int main()
       n++;
     }
 
+  float dx = 6, dy = 5;
   float x = 300, y = 300;
 
   while (app.isOpen())
@@ -38,7 +40,12 @@ int main()
         app.close();
     }
 
-    sBall.setPosition(x, y);
+    sBall.move(dx, dy);
+    Vector2f b = sBall.getPosition();
+    if (b.x < 0 || b.x > 520)
+      dx = -dx;
+    if (b.y < 0 || b.y > 450)
+      dy = -dy;
 
     app.clear();
     app.draw(sBackground);
