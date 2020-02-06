@@ -44,6 +44,10 @@ int main()
     {
       if (e.type == Event::Closed)
         app.close();
+      else if (e.key.code == Keyboard::Right)
+        sPaddle.move(6, 0);
+      else if (e.key.code == Keyboard::Left)
+        sPaddle.move(-6, 0);
     }
 
     sBall.move(dx, 0);
