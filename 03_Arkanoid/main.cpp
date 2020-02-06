@@ -2,8 +2,14 @@
 #include <time.h>
 using namespace sf;
 
+bool isCollide(Sprite s1, Sprite s2)
+{
+  return s1.getGlobalBounds().intersects(s2.getGlobalBounds());
+}
+
 int main()
 {
+  srand(time(0));
   RenderWindow app(VideoMode(520, 450), "Arkanoid!");
   app.setFramerateLimit(60);
 
@@ -40,7 +46,22 @@ int main()
         app.close();
     }
 
-    sBall.move(dx, dy);
+    sBall.move(dx, 0);
+    for (int i = 0; i < n; i++)
+      if (isCollide(sBall, block[i]))
+      {
+        block[i].setPosition(-100, 0);
+        dx = -dx;
+      }
+
+    sBall.move(0, dy);
+    for (int i = 0; i < n; i++)
+      if (isCollide(sBall, block[i]))
+      {
+        block[i].setPosition(-100, 0);
+        dy = -dy;
+      }
+
     Vector2f b = sBall.getPosition();
     if (b.x < 0 || b.x > 520)
       dx = -dx;
