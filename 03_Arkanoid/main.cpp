@@ -50,6 +50,9 @@ int main()
         sPaddle.move(-6, 0);
     }
 
+    if (isCollide(sPaddle, sBall))
+      dy = -(rand() % 5 + 2);
+
     sBall.move(dx, 0);
     for (int i = 0; i < n; i++)
       if (isCollide(sBall, block[i]))
