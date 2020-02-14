@@ -57,7 +57,16 @@ int main()
         {
             if (e.type == Event::Closed)
                 window.close();
+            else if (e.key.code == Keyboard::Left)
+                dir = 1;
+            else if (e.key.code == Keyboard::Right)
+                dir = 2;
+            else if (e.key.code == Keyboard::Up)
+                dir = 3;
+            else if (e.key.code == Keyboard::Down)
+                dir = 0;
         }
+
         if (timer > delay)
         {
             timer = 0;
