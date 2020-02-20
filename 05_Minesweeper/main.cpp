@@ -53,12 +53,23 @@ int main()
 
   while (app.isOpen())
   {
+    Vector2i pos = Mouse::getPosition(app);
+    int x = pos.x / w;
+    int y = pos.y / w;
 
     Event e;
     while (app.pollEvent(e))
     {
       if (e.type == Event::Closed)
         app.close();
+
+      if (e.type == Event::MouseButtonPressed)
+      {
+        if (e.mouseButton.button == Mouse::Left)
+          sgrid[x][y] = grid[x][y];
+        if (e.mouseButton.button == Mouse::Right)
+          sgrid[x][y] = 11;
+      }
     }
 
     app.clear(Color::White);

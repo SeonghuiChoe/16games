@@ -1,7 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <time.h>
 using namespace sf;
-using namespace std;
 
 const int M = 20;
 const int N = 10;
