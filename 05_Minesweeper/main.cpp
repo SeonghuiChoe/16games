@@ -11,6 +11,7 @@ int main()
   int w = 32;
   int grid[12][12];
   int sgrid[12][12]; //for showing
+  bool flag = false;
 
   Texture t;
   t.loadFromFile("images/tiles.jpg");
@@ -66,7 +67,13 @@ int main()
       if (e.type == Event::MouseButtonPressed)
       {
         if (e.mouseButton.button == Mouse::Left)
+        {
+          if (grid[x][y] == 9)
+          {
+            flag = true;
+          }
           sgrid[x][y] = grid[x][y];
+        }
         if (e.mouseButton.button == Mouse::Right)
           sgrid[x][y] = 11;
       }
@@ -77,7 +84,8 @@ int main()
     for (int i = 1; i <= 10; i++)
       for (int j = 1; j <= 10; j++)
       {
-        sgrid[i][j] = grid[i][j];
+        if (flag)
+          sgrid[i][j] = grid[i][j];
         s.setTextureRect(IntRect(sgrid[i][j] * w, 0, w, w));
         s.setPosition(i * w, j * w);
         app.draw(s);
