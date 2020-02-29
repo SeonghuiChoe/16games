@@ -21,6 +21,8 @@ int main()
   float acc = 0.2, dec = 0.3;
   float turnSpeed = 0.08;
 
+  int offsetX = 0, offsetY = 0;
+
   while (app.isOpen())
   {
 
@@ -58,15 +60,15 @@ int main()
         speed -= acc;
     }
 
-    if (!Up && !Down)
-    {
-      if (speed - dec > 0)
-        speed -= dec;
-      else if (speed + dec < 0)
-        speed += dec;
-      else
-        speed = 0;
-    }
+    // if (!Up && !Down)
+    // {
+    //   if (speed - dec > 0)
+    //     speed -= dec;
+    //   else if (speed + dec < 0)
+    //     speed += dec;
+    //   else
+    //     speed = 0;
+    // }
 
     if (Right && speed != 0)
       angle += turnSpeed * speed / maxSpeed;
@@ -76,10 +78,17 @@ int main()
     x += sin(angle) * speed;
     y -= cos(angle) * speed;
 
+    if (x > 320)
+      offsetX = x - 320;
+    if (y > 240)
+      offsetY = y - 240;
+
     app.clear(Color::White);
+
+    sBackground.setPosition(-offsetX, -offsetY);
     app.draw(sBackground);
 
-    sCar.setPosition(x, y);
+    sCar.setPosition(x - offsetX, y - offsetY);
     sCar.setRotation(angle * 180 / 3.141592);
     sCar.setColor(Color::Red);
     app.draw(sCar);
