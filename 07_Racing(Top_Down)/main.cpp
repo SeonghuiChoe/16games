@@ -16,6 +16,7 @@ struct Car
   {
     x += sin(angle) * speed;
     y -= cos(angle) * speed;
+    angle += 0.08;
   }
 };
 
