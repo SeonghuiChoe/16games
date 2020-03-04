@@ -2,21 +2,38 @@
 #include <math.h>
 using namespace sf;
 
+const int num = 3; //checkpoints
+int points[num][2] = {300, 1700,
+                      600, 1600,
+                      500, 1800};
+
 struct Car
 {
   float x, y, speed, angle;
+  int n;
 
   Car()
   {
     speed = 2;
     angle = 0;
+    n = 0;
   }
 
   void move()
   {
     x += sin(angle) * speed;
     y -= cos(angle) * speed;
-    angle += 0.08;
+
+    float tx = points[n][0];
+    float ty = points[n][1];
+    float beta = angle - atan2(tx - x, -ty + y);
+    if (sin(beta) < 0)
+      angle += 0.08;
+    else
+      angle -= 0.08;
+
+    if ((x - tx) * (x - tx) + (y - ty) * (y - ty) < 25 * 25)
+      n = (n + 1) % num;
   }
 };
 
