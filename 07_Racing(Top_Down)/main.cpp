@@ -2,10 +2,15 @@
 #include <math.h>
 using namespace sf;
 
-const int num = 3; //checkpoints
-int points[num][2] = {300, 1700,
-                      600, 1600,
-                      500, 1800};
+const int num = 8; //checkpoints
+int points[num][2] = {300, 610,
+                      1270, 430,
+                      1380, 2380,
+                      1900, 2460,
+                      1970, 1700,
+                      2550, 1680,
+                      2560, 3150,
+                      500, 3300};
 
 struct Car
 {
@@ -47,8 +52,10 @@ int main()
   t2.loadFromFile("images/car.png");
 
   Sprite sBackground(t1), sCar(t2);
-  sCar.setPosition(320, 340);
+  sBackground.scale(2, 2);
+
   sCar.setOrigin(22, 22);
+  float R = 22;
 
   const int N = 5;
   Car car[N];
@@ -59,7 +66,6 @@ int main()
     car[i].speed = 7 + i;
   }
 
-  float x = 300, y = 300;
   float speed = 0, angle = 0;
   float maxSpeed = 12.0;
   float acc = 0.2, dec = 0.3;
@@ -124,7 +130,6 @@ int main()
 
     for (int i = 0; i < N; i++)
       car[i].move();
-    float R = 22;
 
     //collision
     for (int i = 0; i < N; i++)
@@ -144,12 +149,12 @@ int main()
         }
       }
 
+    app.clear(Color::White);
+
     if (car[0].x > 320)
       offsetX = car[0].x - 320;
     if (car[0].y > 240)
       offsetY = car[0].y - 240;
-
-    app.clear(Color::White);
 
     sBackground.setPosition(-offsetX, -offsetY);
     app.draw(sBackground);
