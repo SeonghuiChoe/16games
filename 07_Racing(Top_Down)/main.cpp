@@ -68,7 +68,7 @@ int main()
 
   float speed = 0, angle = 0;
   float maxSpeed = 12.0;
-  float acc = 0.2, dec = 0.3;
+  float acc = 0.2, dec = 0.03;
   float turnSpeed = 0.08;
 
   int offsetX = 0, offsetY = 0;
@@ -110,15 +110,15 @@ int main()
         speed -= acc;
     }
 
-    // if (!Up && !Down)
-    // {
-    //   if (speed - dec > 0)
-    //     speed -= dec;
-    //   else if (speed + dec < 0)
-    //     speed += dec;
-    //   else
-    //     speed = 0;
-    // }
+    if (!Up && !Down)
+    {
+      if (speed - dec > 0)
+        speed -= dec;
+      else if (speed + dec < 0)
+        speed += dec;
+      else
+        speed = 0;
+    }
 
     if (Right && speed != 0)
       angle += turnSpeed * speed / maxSpeed;
