@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <math.h>
 using namespace sf;
 
 int width = 1024;
@@ -143,7 +144,7 @@ int main()
   float x=0,dx=0;
 
   ///////draw road////////
-  for(int n = startPos; n<startPos+300; n++)  
+  for(int n = startPos; n<startPos+300; n++)
    {
     Line &l = lines[n%N];
     l.project(playerX*roadW-x, camH, startPos*segL - (n>=N?N*segL:0));
