@@ -46,6 +46,13 @@ int main()
     RenderWindow app(VideoMode(width, height), "Outrun Racing!");
     app.setFramerateLimit(60);
 
+    Texture bg;
+    bg.loadFromFile("images/bg.png");
+    bg.setRepeated(true);
+    Sprite sBackground(bg);
+    sBackground.setTextureRect(IntRect(0, 0, 5000, 411));
+    sBackground.setPosition(-2000, 0);
+
     std::vector<Line> lines;
 
     for (int i = 0; i < 1600; i++)
@@ -85,6 +92,8 @@ int main()
         while (pos < 0)
             pos += N * segL;
 
+        app.clear(Color(105, 205, 4));
+        app.draw(sBackground);
         int startPos = pos / segL;
         int camH = lines[startPos].y + H;
 
