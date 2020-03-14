@@ -69,22 +69,22 @@ int main()
 
     while (app.isOpen())
     {
+        int speed = 0;
+
         Event e;
         while (app.pollEvent(e))
         {
             if (e.type == Event::Closed)
                 app.close();
             else if (e.key.code == Keyboard::Up)
-                pos = +200;
+                speed = 200;
             else if (e.key.code == Keyboard::Down)
-                pos = -200;
+                speed = -200;
             else if (e.key.code == Keyboard::Right)
                 playerX += 0.1;
             else if (e.key.code == Keyboard::Left)
                 playerX -= 0.1;
         }
-
-        int speed = 0;
 
         pos += speed;
         while (pos >= N * segL)
