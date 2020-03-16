@@ -1,5 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <math.h>
 using namespace sf;
 
@@ -59,6 +58,12 @@ int main()
     {
         Line line;
         line.z = i * segL;
+
+        if (i > 300 && i < 700)
+            line.curve = 0.5;
+        if (i > 1100)
+            line.curve = -0.7;
+
         lines.push_back(line);
     }
 
@@ -96,6 +101,10 @@ int main()
         app.draw(sBackground);
         int startPos = pos / segL;
         int camH = lines[startPos].y + H;
+        if (speed > 0)
+            sBackground.move(-lines[startPos].curve * 2, 0);
+        if (speed < 0)
+            sBackground.move(lines[startPos].curve * 2, 0);
 
         int maxy = height;
         float x = 0, dx = 0;
