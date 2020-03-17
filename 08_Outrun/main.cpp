@@ -61,8 +61,9 @@ int main()
 
         if (i > 300 && i < 700)
             line.curve = 0.5;
-        if (i > 1100)
-            line.curve = -0.7;
+
+        if (i > 750)
+            line.y = sin(i / 30.0) * 1500;
 
         lines.push_back(line);
     }
