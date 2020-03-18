@@ -38,6 +38,32 @@ struct Line
         Y = (1 - scale * (y - camY)) * height / 2;
         W = scale * roadW * width / 2;
     }
+
+    void drawSprite(RenderWindow &app)
+    {
+        Sprite s = sprite;
+        int w = s.getTextureRect().width;
+        int h = s.getTextureRect().height;
+
+        float destX = X + scale * spriteX * width / 2;
+        float destY = Y + 4;
+        float destW = w * W / 266;
+        float destH = h * W / 266;
+
+        destX += destW * spriteX; //offsetX
+        destY += destH * (-1);    //offsetY
+
+        float clipH = destY + destH - clip;
+        if (clipH < 0)
+            clipH = 0;
+
+        if (clipH >= destH)
+            return;
+        s.setTextureRect(IntRect(0, 0, w, h - h * clipH / destH));
+        s.setScale(destW / w, destH / h);
+        s.setPosition(destX, destY);
+        app.draw(s);
+    }
 };
 
 int main()
@@ -52,6 +78,10 @@ int main()
     sBackground.setTextureRect(IntRect(0, 0, 5000, 411));
     sBackground.setPosition(-2000, 0);
 
+    Texture t;
+    t.loadFromFile("images/5.png");
+    Sprite sTree(t);
+
     std::vector<Line> lines;
 
     for (int i = 0; i < 1600; i++)
@@ -64,6 +94,12 @@ int main()
 
         if (i > 750)
             line.y = sin(i / 30.0) * 1500;
+
+        if (i % 20 == 0)
+        {
+            line.spriteX = -2.5;
+            line.sprite = sTree;
+        }
 
         lines.push_back(line);
     }
@@ -133,6 +169,10 @@ int main()
             drawQuad(app, rumble, p.X, p.Y, p.W * 1.2, l.X, l.Y, l.W * 1.2);
             drawQuad(app, road, p.X, p.Y, p.W, l.X, l.Y, l.W);
         }
+
+        ////////draw objects////////
+        for (int n = startPos + 300; n > startPos; n--)
+            lines[n % N].drawSprite(app);
 
         app.display();
     }
