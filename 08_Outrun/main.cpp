@@ -71,16 +71,21 @@ int main()
     RenderWindow app(VideoMode(width, height), "Outrun Racing!");
     app.setFramerateLimit(60);
 
+    Texture t[50];
+    Sprite object[50];
+    for (int i = 1; i <= 7; i++)
+    {
+        t[i].loadFromFile("images/" + std::to_string(i) + ".png");
+        t[i].setSmooth(true);
+        object[i].setTexture(t[i]);
+    }
+
     Texture bg;
     bg.loadFromFile("images/bg.png");
     bg.setRepeated(true);
     Sprite sBackground(bg);
     sBackground.setTextureRect(IntRect(0, 0, 5000, 411));
     sBackground.setPosition(-2000, 0);
-
-    Texture t;
-    t.loadFromFile("images/5.png");
-    Sprite sTree(t);
 
     std::vector<Line> lines;
 
@@ -91,15 +96,37 @@ int main()
 
         if (i > 300 && i < 700)
             line.curve = 0.5;
+        if (i > 1100)
+            line.curve = -0.7;
+
+        if (i < 300 && i % 20 == 0)
+        {
+            line.spriteX = -2.5;
+            line.sprite = object[5];
+        }
+        if (i % 17 == 0)
+        {
+            line.spriteX = 2.0;
+            line.sprite = object[6];
+        }
+        if (i > 300 && i % 20 == 0)
+        {
+            line.spriteX = -0.7;
+            line.sprite = object[4];
+        }
+        if (i > 800 && i % 20 == 0)
+        {
+            line.spriteX = -1.2;
+            line.sprite = object[1];
+        }
+        if (i == 400)
+        {
+            line.spriteX = -1.2;
+            line.sprite = object[7];
+        }
 
         if (i > 750)
             line.y = sin(i / 30.0) * 1500;
-
-        if (i % 20 == 0)
-        {
-            line.spriteX = -2.5;
-            line.sprite = sTree;
-        }
 
         lines.push_back(line);
     }
@@ -126,6 +153,12 @@ int main()
                 playerX += 0.1;
             else if (e.key.code == Keyboard::Left)
                 playerX -= 0.1;
+            else if (e.key.code == Keyboard::Tab)
+                speed *= 3;
+            else if (e.key.code == Keyboard::W)
+                H += 100;
+            else if (e.key.code == Keyboard::S)
+                H -= 100;
         }
 
         pos += speed;
