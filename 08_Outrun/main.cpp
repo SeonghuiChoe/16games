@@ -154,7 +154,7 @@ int main()
             else if (e.key.code == Keyboard::Left)
                 playerX -= 0.1;
             else if (e.key.code == Keyboard::Tab)
-                speed *= 3;
+                speed = 400;
             else if (e.key.code == Keyboard::W)
                 H += 100;
             else if (e.key.code == Keyboard::S)
