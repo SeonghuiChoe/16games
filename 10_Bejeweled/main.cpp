@@ -49,6 +49,7 @@ int main()
   int x0, y0, x, y;
   int click = 0;
   Vector2i pos;
+  bool isSwap = false, isMoving = false;
 
   while (app.isOpen())
   {
@@ -61,7 +62,8 @@ int main()
       if (e.type == Event::MouseButtonPressed)
         if (e.mouseButton.button == Mouse::Left)
         {
-          click++;
+          if (!isSwap && !isMoving)
+            click++;
           pos = Mouse::getPosition(app) - offset;
         }
     }
@@ -79,6 +81,7 @@ int main()
       if (abs(x - x0) + abs(y - y0) == 1)
       {
         swap(grid[y0][x0], grid[y][x]);
+        isSwap = 1;
         click = 0;
       }
       else
@@ -86,6 +89,7 @@ int main()
     }
 
     //Moving animation
+    isMoving = false;
     for (int i = 1; i <= 8; i++)
       for (int j = 1; j <= 8; j++)
       {
@@ -97,7 +101,16 @@ int main()
           p.x -= dx / abs(dx);
         if (dy)
           p.y -= dy / abs(dy);
+        if (dx || dy)
+          isMoving = 1;
       }
+
+    //Second swap if no match
+    if (isSwap && !isMoving)
+    {
+      swap(grid[y0][x0], grid[y][x]);
+      isSwap = 0;
+    }
 
     //////draw///////
     app.draw(background);
