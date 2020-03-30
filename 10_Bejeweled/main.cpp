@@ -29,7 +29,7 @@ int main()
   srand(time(0));
 
   RenderWindow app(VideoMode(740, 480), "Match-3 Game!");
-  app.setFramerateLimit(60);
+  app.setFramerateLimit(180);
 
   Texture t1, t2;
   t1.loadFromFile("images/background.png");
@@ -88,6 +88,21 @@ int main()
         click = 1;
     }
 
+    //Match finding
+    for (int i = 1; i <= 8; i++)
+      for (int j = 1; j <= 8; j++)
+      {
+        if (grid[i][j].kind == grid[i + 1][j].kind)
+          if (grid[i][j].kind == grid[i - 1][j].kind)
+            for (int n = -1; n <= 1; n++)
+              grid[i + n][j].match++;
+
+        if (grid[i][j].kind == grid[i][j + 1].kind)
+          if (grid[i][j].kind == grid[i][j - 1].kind)
+            for (int n = -1; n <= 1; n++)
+              grid[i][j + n].match++;
+      }
+
     //Moving animation
     isMoving = false;
     for (int i = 1; i <= 8; i++)
@@ -105,11 +120,53 @@ int main()
           isMoving = 1;
       }
 
+    //Deleting amimation
+    if (!isMoving)
+      for (int i = 1; i <= 8; i++)
+        for (int j = 1; j <= 8; j++)
+          if (grid[i][j].match)
+            if (grid[i][j].alpha > 10)
+            {
+              grid[i][j].alpha -= 10;
+              isMoving = true;
+            }
+
+    //Get score
+    int score = 0;
+    for (int i = 1; i <= 8; i++)
+      for (int j = 1; j <= 8; j++)
+        score += grid[i][j].match;
+
     //Second swap if no match
     if (isSwap && !isMoving)
     {
-      swap(grid[y0][x0], grid[y][x]);
+      if (!score)
+        swap(grid[y0][x0], grid[y][x]);
       isSwap = 0;
+    }
+
+    //Update grid
+    if (!isMoving)
+    {
+      for (int i = 8; i > 0; i--)
+        for (int j = 1; j <= 8; j++)
+          if (grid[i][j].match)
+            for (int n = i; n > 0; n--)
+              if (!grid[n][j].match)
+              {
+                swap(grid[n][j], grid[i][j]);
+                break;
+              };
+
+      for (int j = 1; j <= 8; j++)
+        for (int i = 8, n = 0; i > 0; i--)
+          if (grid[i][j].match)
+          {
+            grid[i][j].kind = rand() % 7;
+            grid[i][j].y = -ts * n++;
+            grid[i][j].match = 0;
+            grid[i][j].alpha = 255;
+          }
     }
 
     //////draw///////
