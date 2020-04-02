@@ -30,6 +30,14 @@ int main()
     {
       if (e.type == Event::Closed)
         app.close();
+
+      if (e.type == Event::MouseButtonPressed)
+        if (e.mouseButton.button == Mouse::Left)
+        {
+          Vector2i pos = Mouse::getPosition(app) + Vector2i(ts / 2, ts / 2) - Vector2i(offset);
+          pos /= ts;
+          grid[pos.x][pos.y].orientation++;
+        }
     }
 
     app.clear();
@@ -40,7 +48,7 @@ int main()
       {
         pipe &p = grid[j][i];
         sPipe.setTextureRect(IntRect(ts * 2, 0, ts, ts));
-        sPipe.setRotation(p.orientation);
+        sPipe.setRotation(p.orientation * 90);
         sPipe.setPosition(j * ts, i * ts);
         sPipe.move(offset);
         app.draw(sPipe);
