@@ -9,11 +9,16 @@ Vector2f offset(65, 55);
 struct pipe
 {
   int orientation;
+  float angle;
   bool on;
+
+  pipe() { angle = 0; }
 } grid[N][N];
 
 int main()
 {
+  srand(time(0));
+
   RenderWindow app(VideoMode(390, 390), "The Pipe Puzzle!");
 
   Texture t1, t2;
@@ -47,8 +52,12 @@ int main()
       for (int j = 0; j < N; j++)
       {
         pipe &p = grid[j][i];
+
+        p.angle += .05;
+        if (p.angle > p.orientation * 90)
+          p.angle = p.orientation * 90;
         sPipe.setTextureRect(IntRect(ts * 2, 0, ts, ts));
-        sPipe.setRotation(p.orientation * 90);
+        sPipe.setRotation(p.angle);
         sPipe.setPosition(j * ts, i * ts);
         sPipe.move(offset);
         app.draw(sPipe);
