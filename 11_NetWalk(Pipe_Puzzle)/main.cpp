@@ -93,12 +93,14 @@ int main()
 
   RenderWindow app(VideoMode(390, 390), "The Pipe Puzzle!");
 
-  Texture t1, t2;
+  Texture t1, t2, t3;
   t1.loadFromFile("images/background.png");
-  t2.loadFromFile("images/pipes.png");
+  t2.loadFromFile("images/comp.png");
+  t3.loadFromFile("images/pipes.png");
 
-  Sprite sBackground(t1), sPipe(t2);
+  Sprite sBackground(t1), sComp(t2), sPipe(t3);
   sPipe.setOrigin(27, 27);
+  sComp.setOrigin(18, 18);
 
   generatePuzzle();
 
@@ -161,6 +163,17 @@ int main()
         sPipe.setPosition(j * ts, i * ts);
         sPipe.move(offset);
         app.draw(sPipe);
+
+        if (kind == 1)
+        {
+          if (p.on)
+            sComp.setTextureRect(IntRect(53, 0, 36, 36));
+          else
+            sComp.setTextureRect(IntRect(0, 0, 36, 36));
+          sComp.setPosition(j * ts, i * ts);
+          sComp.move(offset);
+          app.draw(sComp);
+        }
       }
     app.display();
   }
