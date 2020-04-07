@@ -63,9 +63,6 @@ void generatePuzzle()
       nodes.erase(nodes.begin() + n);
       continue;
     }
-    if (cell(v).dirs.size() == 2)
-      if (rand() % 50)
-        continue;
 
     bool complete = 1;
     for (auto D : DIR)
@@ -117,12 +114,6 @@ int main()
         if (s == "0011" || s == "0111" || s == "0101" || s == "0010")
           p.orientation = n;
         p.rotate();
-      }
-
-      for (int n = 0; n < rand() % 4; n++) //shuffle//
-      {
-        grid[j][i].orientation++;
-        grid[j][i].rotate();
       }
     }
 
