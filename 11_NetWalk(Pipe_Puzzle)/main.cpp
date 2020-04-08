@@ -63,6 +63,9 @@ void generatePuzzle()
       nodes.erase(nodes.begin() + n);
       continue;
     }
+    if (cell(v).dirs.size() == 2)
+      if (rand() % 50)
+        continue;
 
     bool complete = 1;
     for (auto D : DIR)
