@@ -87,6 +87,18 @@ void generatePuzzle()
   }
 }
 
+void drop(Vector2i v)
+{
+  if (cell(v).on)
+    return;
+  cell(v).on = true;
+
+  for (auto d : DIR)
+    if (!isOut(v + d))
+      if (cell(v).isConnect(d) && cell(v + d).isConnect(-d))
+        drop(v + d);
+}
+
 int main()
 {
   srand(time(0));
@@ -134,6 +146,13 @@ int main()
           Vector2i pos = Mouse::getPosition(app) + Vector2i(ts / 2, ts / 2) - Vector2i(offset);
           pos /= ts;
           grid[pos.x][pos.y].orientation++;
+          grid[pos.x][pos.y].rotate();
+
+          for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+              grid[j][i].on = 0;
+
+          drop(Vector2i(3, 3));
         }
     }
 
