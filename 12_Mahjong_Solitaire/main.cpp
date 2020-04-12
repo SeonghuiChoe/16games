@@ -20,6 +20,7 @@ int main()
   Sprite s(t1), sBackground(t2);
   int w = 48, h = 66;
   int stepX = w / 2 - 2, stepY = h / 2 - 2;
+  float offX = 4.6, offY = 7.1; // z offset
 
   ////load from file////
   std::fstream myfile("files/map.txt");
@@ -55,7 +56,7 @@ int main()
           if (k == 0)
             continue;
           s.setTextureRect(IntRect(42 * w, 0, w, h));
-          s.setPosition(x * stepX, y * stepY);
+          s.setPosition(x * stepX + z * offX, y * stepY - z * offY);
           s.move(30, 0); //desk offset
           app.draw(s);
         }
