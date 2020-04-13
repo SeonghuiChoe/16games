@@ -8,6 +8,21 @@ int field[50][50][50] = {0};
 int &f(int x, int y, int z) { return field[y + 2][x + 2][z]; }
 int &f(Vector3i v) { return f(v.x, v.y, v.z); }
 
+bool isOpen(int x, int y, int z)
+{
+  for (int i = -1; i <= 1; i++)
+    for (int j = -1; j <= 1; j++)
+      if (f(x + 2, y + i, z) > 0 && f(x - 2, y + j, z) > 0)
+        return 0;
+
+  for (int i = -1; i <= 1; i++)
+    for (int j = -1; j <= 1; j++)
+      if (f(x + i, y + j, z + 1) > 0)
+        return 0;
+
+  return 1;
+}
+
 int main()
 {
   srand(time(0));
@@ -37,6 +52,35 @@ int main()
           f(x, y, z) = 1;
     }
 
+  ////create map//////
+  for (int k = 1;; k++)
+  {
+    std::vector<Vector3i> opens;
+    for (int z = 0; z < 10; z++)
+      for (int y = 0; y < 18; y++)
+        for (int x = 0; x < 30; x++)
+          if (f(x, y, z) > 0 && isOpen(x, y, z))
+            opens.push_back(Vector3i(x, y, z));
+
+    int n = opens.size();
+    if (n < 2)
+      break;
+    int a = 0, b = 0;
+    while (a == b)
+    {
+      a = rand() % n;
+      b = rand() % n;
+    }
+    f(opens[a]) = -k;
+    f(opens[b]) = -k;
+    k %= 42;
+  }
+
+  for (int z = 0; z < 10; z++)
+    for (int y = 0; y < 18; y++)
+      for (int x = 0; x < 30; x++)
+        f(x, y, z) *= -1;
+
   while (app.isOpen())
   {
     Event e;
@@ -55,7 +99,7 @@ int main()
           int k = f(x, y, z);
           if (k == 0)
             continue;
-          s.setTextureRect(IntRect(42 * w, 0, w, h));
+          s.setTextureRect(IntRect(k * w, 0, w, h));
           s.setPosition(x * stepX + z * offX, y * stepY - z * offY);
           s.move(30, 0); //desk offset
           app.draw(s);
