@@ -36,6 +36,7 @@ int main()
   int w = 48, h = 66;
   int stepX = w / 2 - 2, stepY = h / 2 - 2;
   float offX = 4.6, offY = 7.1; // z offset
+  Vector3i v1, v2;
 
   ////load from file////
   std::fstream myfile("files/map.txt");
@@ -88,6 +89,31 @@ int main()
     {
       if (e.type == Event::Closed)
         app.close();
+
+      if (e.type == Event::MouseButtonPressed)
+        if (e.mouseButton.button == Mouse::Left)
+          for (int z = 0; z < 10; z++)
+          {
+            Vector2i pos = Mouse::getPosition(app) - Vector2i(30, 0); // 30 - desk offset
+            int x = (pos.x - z * offX) / stepX;
+            int y = (pos.y + z * offY) / stepY;
+
+            for (int i = 0; i < 2; i++)
+              for (int j = 0; j < 2; j++)
+                if (f(x - i, y - j, z) > 0 && isOpen(x - i, y - j, z))
+                  v1 = Vector3i(x - i, y - j, z);
+
+            if (v1 == v2)
+              continue;
+
+            int a = f(v1), b = f(v2);
+            if (a == b)
+            {
+              f(v1) *= -1;
+              f(v2) *= -1;
+            }
+            v2 = v1;
+          }
     }
 
     app.clear();
@@ -96,8 +122,8 @@ int main()
       for (int x = 30; x >= 0; x--)
         for (int y = 0; y < 18; y++)
         {
-          int k = f(x, y, z);
-          if (k == 0)
+          int k = f(x, y, z) - 1;
+          if (k < 0)
             continue;
           s.setTextureRect(IntRect(k * w, 0, w, h));
           s.setPosition(x * stepX + z * offX, y * stepY - z * offY);
