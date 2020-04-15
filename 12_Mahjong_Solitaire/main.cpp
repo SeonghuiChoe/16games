@@ -126,6 +126,8 @@ int main()
           if (k < 0)
             continue;
           s.setTextureRect(IntRect(k * w, 0, w, h));
+          if (isOpen(x, y, z))
+            s.setTextureRect(IntRect(k * w, h, w, h));
           s.setPosition(x * stepX + z * offX, y * stepY - z * offY);
           s.move(30, 0); //desk offset
           app.draw(s);
