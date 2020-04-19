@@ -66,6 +66,11 @@ int main()
   t.clear();
   t.draw(sBackground);
 
+  Font font;
+  font.loadFromFile("sansation.ttf");
+  Text text("YOU WIN!", font, 35);
+  text.setPosition(W / 2 - 80, 20);
+
   bool Game = 1;
 
   while (window.isOpen())
@@ -106,16 +111,26 @@ int main()
     }
 
     if (!Game)
+    {
+      window.draw(text);
+      window.display();
       continue;
+    }
 
     for (int i = 0; i < speed; i++)
     {
       p1.tick();
       p2.tick();
       if (field[p1.x][p1.y] == 1)
+      {
+        text.setColor(p2.color);
         Game = 0;
+      }
       if (field[p2.x][p2.y] == 1)
+      {
+        text.setColor(p1.color);
         Game = 0;
+      }
       field[p1.x][p1.y] = 1;
       field[p2.x][p2.y] = 1;
 
