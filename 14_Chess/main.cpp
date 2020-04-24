@@ -51,6 +51,7 @@ int main()
 
   bool isMove = false;
   float dx = 0, dy = 0;
+  int n = 0;
 
   while (window.isOpen())
   {
@@ -65,12 +66,14 @@ int main()
       /////drag and drop///////
       if (e.type == Event::MouseButtonPressed)
         if (e.mouseButton.button == Mouse::Left)
-          if (s.getGlobalBounds().contains(pos.x, pos.y))
-          {
-            isMove = true;
-            dx = pos.x - s.getPosition().x;
-            dy = pos.y - s.getPosition().y;
-          }
+          for (int i = 0; i < 32; i++)
+            if (f[i].getGlobalBounds().contains(pos.x, pos.y))
+            {
+              isMove = true;
+              n = i;
+              dx = pos.x - f[i].getPosition().x;
+              dy = pos.y - f[i].getPosition().y;
+            }
 
       if (e.type == Event::MouseButtonReleased)
         if (e.mouseButton.button == Mouse::Left)
@@ -79,11 +82,10 @@ int main()
         }
     }
     if (isMove)
-      s.setPosition(pos.x - dx, pos.y - dy);
+      f[n].setPosition(pos.x - dx, pos.y - dy);
 
     window.clear();
     window.draw(sBoard);
-    window.draw(s);
     for (int i = 0; i < 32; i++)
       f[i].move(offset);
     for (int i = 0; i < 32; i++)
