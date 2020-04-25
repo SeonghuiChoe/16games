@@ -51,6 +51,7 @@ int main()
 
   bool isMove = false;
   float dx = 0, dy = 0;
+  Vector2f oldPos, newPos;
   int n = 0;
 
   while (window.isOpen())
@@ -79,6 +80,9 @@ int main()
         if (e.mouseButton.button == Mouse::Left)
         {
           isMove = false;
+          Vector2f p = f[n].getPosition() + Vector2f(size / 2, size / 2);
+          newPos = Vector2f(size * int(p.x / size), size *int(p.y / size));
+          f[n].setPosition(newPos);
         }
     }
     if (isMove)
