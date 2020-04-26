@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <time.h>
+#include <iostream>
 using namespace sf;
 
 int size = 56;
@@ -16,6 +17,14 @@ int board[8][8] =
      0, 0, 0, 0, 0, 0, 0, 0,
      6, 6, 6, 6, 6, 6, 6, 6,
      1, 2, 3, 4, 5, 3, 2, 1};
+
+std::string toChessNote(Vector2f p)
+{
+  std::string s = "";
+  s += char(p.x / size + 97);
+  s += char(7 - p.y / size + 49);
+  return s;
+}
 
 void loadPosition()
 {
@@ -52,6 +61,7 @@ int main()
   bool isMove = false;
   float dx = 0, dy = 0;
   Vector2f oldPos, newPos;
+  std::string str;
   int n = 0;
 
   while (window.isOpen())
@@ -74,6 +84,7 @@ int main()
               n = i;
               dx = pos.x - f[i].getPosition().x;
               dy = pos.y - f[i].getPosition().y;
+              oldPos = f[i].getPosition();
             }
 
       if (e.type == Event::MouseButtonReleased)
@@ -82,6 +93,8 @@ int main()
           isMove = false;
           Vector2f p = f[n].getPosition() + Vector2f(size / 2, size / 2);
           newPos = Vector2f(size * int(p.x / size), size *int(p.y / size));
+          str = toChessNote(oldPos) + toChessNote(newPos);
+          std::cout << str << std::endl;
           f[n].setPosition(newPos);
         }
     }
