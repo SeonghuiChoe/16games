@@ -26,6 +26,27 @@ std::string toChessNote(Vector2f p)
   return s;
 }
 
+Vector2f toCoord(char a, char b)
+{
+  int x = int(a) - 97;
+  int y = 7 - int(b) + 49;
+  return Vector2f(x * size, y * size);
+}
+
+void move(std::string str)
+{
+  Vector2f oldPos = toCoord(str[0], str[1]);
+  Vector2f newPos = toCoord(str[2], str[3]);
+
+  for (int i = 0; i < 32; i++)
+    if (f[i].getPosition() == newPos)
+      f[i].setPosition(-100, -100);
+
+  for (int i = 0; i < 32; i++)
+    if (f[i].getPosition() == oldPos)
+      f[i].setPosition(newPos);
+}
+
 void loadPosition()
 {
   int k = 0;
@@ -94,6 +115,7 @@ int main()
           Vector2f p = f[n].getPosition() + Vector2f(size / 2, size / 2);
           newPos = Vector2f(size * int(p.x / size), size *int(p.y / size));
           str = toChessNote(oldPos) + toChessNote(newPos);
+          move(str);
           std::cout << str << std::endl;
           f[n].setPosition(newPos);
         }
