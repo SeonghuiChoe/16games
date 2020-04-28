@@ -7,6 +7,7 @@ int size = 56;
 Vector2f offset(28, 28);
 
 Sprite f[32]; //figures
+std::string position = "";
 
 int board[8][8] =
     {-1, -2, -3, -4, -5, -3, -2, -1,
@@ -62,7 +63,11 @@ void loadPosition()
       f[k].setPosition(size * j, size * i);
       k++;
     }
+
+  for (int i = 0; i < position.length(); i += 5)
+    move(position.substr(i, 4));
 }
+
 int main()
 {
   RenderWindow window(VideoMode(504, 504), "The Chess! (press SPACE)");
@@ -95,6 +100,15 @@ int main()
       if (e.type == Event::Closed)
         window.close();
 
+      ////move back//////
+      if (e.type == Event::KeyPressed)
+        if (e.key.code == Keyboard::BackSpace)
+        {
+          if (position.length() > 6)
+            position.erase(position.length() - 6, 5);
+          loadPosition();
+        }
+
       /////drag and drop///////
       if (e.type == Event::MouseButtonPressed)
         if (e.mouseButton.button == Mouse::Left)
@@ -116,6 +130,7 @@ int main()
           newPos = Vector2f(size * int(p.x / size), size *int(p.y / size));
           str = toChessNote(oldPos) + toChessNote(newPos);
           move(str);
+          position += str + " ";
           std::cout << str << std::endl;
           f[n].setPosition(newPos);
         }
