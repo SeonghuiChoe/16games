@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <time.h>
 #include <iostream>
+// #include "./Connector.hpp"
 using namespace sf;
 
 int size = 56;
@@ -134,7 +135,26 @@ int main()
           std::cout << str << std::endl;
           f[n].setPosition(newPos);
         }
+
+      //comp move
+      if (e.type == Event::KeyPressed)
+        if (e.key.code == Keyboard::Space)
+        {
+          str = "d7d5"; // getNextMove(position);
+
+          oldPos = toCoord(str[0], str[1]);
+          newPos = toCoord(str[2], str[3]);
+
+          for (int i = 0; i < 32; i++)
+            if (f[i].getPosition() == oldPos)
+              n = i;
+
+          move(str);
+          position += str + " ";
+          f[n].setPosition(newPos);
+        }
     }
+
     if (isMove)
       f[n].setPosition(pos.x - dx, pos.y - dy);
 
