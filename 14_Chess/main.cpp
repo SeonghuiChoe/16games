@@ -90,6 +90,7 @@ int main()
   Vector2f oldPos, newPos;
   std::string str;
   int n = 0;
+  bool isAuto = false;
 
   while (window.isOpen())
   {
@@ -149,10 +150,23 @@ int main()
             if (f[i].getPosition() == oldPos)
               n = i;
 
-          move(str);
+          // 뒤로가게 할 수 있도록 정보 저장
           position += str + " ";
-          f[n].setPosition(newPos);
+          isAuto = true;
         }
+    }
+
+    if (isAuto)
+    {
+      Vector2f p = newPos - oldPos;
+      float x = 0, y = 0;
+      if (p.x)
+        x = 0.1;
+      if (p.y)
+        y = 0.1;
+      f[n].move(x, y);
+      if (f[n].getPosition().x >= newPos.x && f[n].getPosition().y >= newPos.y)
+        isAuto = false;
     }
 
     if (isMove)
