@@ -16,12 +16,18 @@ int main()
   RenderWindow app(VideoMode(W, H), "Asteroids!");
   app.setFramerateLimit(60);
 
-  Texture t1, t2;
+  Texture t1, t2, t3;
   t1.loadFromFile("images/spaceship.png");
   t2.loadFromFile("images/background.jpg");
+  t3.loadFromFile("images/explosions/type_A.png");
 
-  Sprite sPlayer(t1), sBackground(t2);
+  Sprite sPlayer(t1), sBackground(t2), sExplosion(t3);
   sPlayer.setTextureRect(IntRect(40, 0, 40, 40));
+
+  sExplosion.setPosition(300, 300);
+  float Frame = 0;
+  float animSpeed = 0.4;
+  int frameCount = 20;
 
   float x = 300, y = 300;
   float dx = 0, dy = 0, angle = 0;
@@ -36,6 +42,11 @@ int main()
       if (e.type == Event::Closed)
         app.close();
     }
+
+    Frame += animSpeed;
+    if (Frame > frameCount)
+      Frame -= frameCount;
+    sExplosion.setTextureRect(IntRect(int(Frame) * 50, 0, 50, 50));
 
     if (e.key.code == Keyboard::Right)
       angle += 3;
@@ -85,6 +96,7 @@ int main()
     app.clear();
     app.draw(sBackground);
     app.draw(sPlayer);
+    app.draw(sExplosion);
     app.display();
   }
 
