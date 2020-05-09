@@ -100,6 +100,26 @@ public:
   }
 };
 
+class bullet : public Entity
+{
+public:
+  bullet()
+  {
+    name = "bullet";
+  }
+
+  void update()
+  {
+    dx = cos(angle * DEGTORAD) * 6;
+    dy = sin(angle * DEGTORAD) * 6;
+    x += dx;
+    y += dy;
+
+    if (x > W || x < 0 || y > H || y < 0)
+      life = 0;
+  }
+};
+
 int main()
 {
   srand(time(0));
@@ -107,11 +127,14 @@ int main()
   RenderWindow app(VideoMode(W, H), "Asteroids!");
   app.setFramerateLimit(60);
 
-  Texture t1, t2, t3, t4;
+  Texture t1, t2, t3, t4, t5;
   t1.loadFromFile("images/spaceship.png");
   t2.loadFromFile("images/background.jpg");
   t3.loadFromFile("images/explosions/type_A.png");
   t4.loadFromFile("images/rock.png");
+  t5.loadFromFile("images/fire_blue.png");
+
+  Animation sBullet(t5, 0, 0, 32, 64, 16, 0.8);
 
   Sprite sPlayer(t1), sBackground(t2), sExplosion(t3);
   sPlayer.setTextureRect(IntRect(40, 0, 40, 40));
@@ -145,6 +168,14 @@ int main()
     {
       if (e.type == Event::Closed)
         app.close();
+
+      if (e.type == Event::KeyPressed)
+        if (e.key.code == Keyboard::Space)
+        {
+          bullet *b = new bullet();
+          b->settings(sBullet, x, y, angle, 10);
+          entities.push_back(b);
+        }
     }
 
     Frame += animSpeed;
