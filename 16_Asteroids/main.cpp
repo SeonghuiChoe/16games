@@ -120,6 +120,13 @@ public:
   }
 };
 
+bool isCollide(Entity *a, Entity *b)
+{
+  return (b->x - a->x) * (b->x - a->x) +
+             (b->y - a->y) * (b->y - a->y) <
+         (a->R + b->R) * (a->R + b->R);
+}
+
 int main()
 {
   srand(time(0));
@@ -191,6 +198,15 @@ int main()
       thrust = true;
     else
       thrust = false;
+
+    for (auto a : entities)
+      for (auto b : entities)
+        if (a->name == "asteroid" && b->name == "bullet")
+          if (isCollide(a, b))
+          {
+            a->life = false;
+            b->life = false;
+          }
 
     //////spaceship movement//////
     if (thrust)
