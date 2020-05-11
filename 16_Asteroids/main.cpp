@@ -40,6 +40,11 @@ public:
     if (n > 0)
       sprite.setTextureRect(frames[int(Frame)]);
   }
+
+  bool isEnd()
+  {
+    return Frame + speed >= frames.size();
+  }
 };
 
 class Entity
@@ -71,7 +76,14 @@ public:
     anim.sprite.setPosition(x, y);
     anim.sprite.setRotation(angle + 90);
     app.draw(anim.sprite);
+
+    CircleShape circle(R);
+    circle.setFillColor(Color(255, 0, 0, 170));
+    circle.setPosition(x, y);
+    circle.setOrigin(R, R);
   }
+
+  virtual ~Entity(){};
 };
 
 class asteroid : public Entity
@@ -120,95 +132,18 @@ public:
   }
 };
 
-bool isCollide(Entity *a, Entity *b)
+class player : public Entity
 {
-  return (b->x - a->x) * (b->x - a->x) +
-             (b->y - a->y) * (b->y - a->y) <
-         (a->R + b->R) * (a->R + b->R);
-}
-
-int main()
-{
-  srand(time(0));
-
-  RenderWindow app(VideoMode(W, H), "Asteroids!");
-  app.setFramerateLimit(60);
-
-  Texture t1, t2, t3, t4, t5;
-  t1.loadFromFile("images/spaceship.png");
-  t2.loadFromFile("images/background.jpg");
-  t3.loadFromFile("images/explosions/type_A.png");
-  t4.loadFromFile("images/rock.png");
-  t5.loadFromFile("images/fire_blue.png");
-
-  Animation sBullet(t5, 0, 0, 32, 64, 16, 0.8);
-
-  Sprite sPlayer(t1), sBackground(t2), sExplosion(t3);
-  sPlayer.setTextureRect(IntRect(40, 0, 40, 40));
-
-  Animation sRock(t4, 0, 0, 64, 64, 16, 0.2);
-  sRock.sprite.setPosition(400, 400);
-
-  std::list<Entity *> entities;
-
-  for (int i = 0; i < 15; i++)
-  {
-    asteroid *a = new asteroid();
-    a->settings(sRock, rand() % W, rand() % H, rand() % 360, 25);
-    entities.push_back(a);
-  }
-
-  sExplosion.setPosition(300, 300);
-  float Frame = 0;
-  float animSpeed = 0.4;
-  int frameCount = 20;
-
-  float x = 300, y = 300;
-  float dx = 0, dy = 0, angle = 0;
+public:
   bool thrust;
 
-  /////main loop/////
-  while (app.isOpen())
+  player()
   {
-    Event e;
-    while (app.pollEvent(e))
-    {
-      if (e.type == Event::Closed)
-        app.close();
+    name = "player";
+  }
 
-      if (e.type == Event::KeyPressed)
-        if (e.key.code == Keyboard::Space)
-        {
-          bullet *b = new bullet();
-          b->settings(sBullet, x, y, angle, 10);
-          entities.push_back(b);
-        }
-    }
-
-    Frame += animSpeed;
-    if (Frame > frameCount)
-      Frame -= frameCount;
-    sExplosion.setTextureRect(IntRect(int(Frame) * 50, 0, 50, 50));
-
-    if (e.key.code == Keyboard::Right)
-      angle += 3;
-    if (e.key.code == Keyboard::Left)
-      angle -= 3;
-    if (e.key.code == Keyboard::Up)
-      thrust = true;
-    else
-      thrust = false;
-
-    for (auto a : entities)
-      for (auto b : entities)
-        if (a->name == "asteroid" && b->name == "bullet")
-          if (isCollide(a, b))
-          {
-            a->life = false;
-            b->life = false;
-          }
-
-    //////spaceship movement//////
+  void update()
+  {
     if (thrust)
     {
       dx += cos(angle * DEGTORAD) * 0.2;
@@ -239,9 +174,122 @@ int main()
       y = 0;
     if (y < 0)
       y = H;
+  }
+};
 
-    sPlayer.setPosition(x, y);
-    sPlayer.setRotation(angle + 90);
+bool isCollide(Entity *a, Entity *b)
+{
+  return (b->x - a->x) * (b->x - a->x) +
+             (b->y - a->y) * (b->y - a->y) <
+         (a->R + b->R) * (a->R + b->R);
+}
+
+int main()
+{
+  srand(time(0));
+
+  RenderWindow app(VideoMode(W, H), "Asteroids!");
+  app.setFramerateLimit(60);
+
+  Texture t1, t2, t3, t4, t5, t6;
+  t1.loadFromFile("images/spaceship.png");
+  t2.loadFromFile("images/background.jpg");
+  t3.loadFromFile("images/explosions/type_C.png");
+  t4.loadFromFile("images/rock.png");
+  t5.loadFromFile("images/fire_blue.png");
+  t6.loadFromFile("images/rock_small.png");
+
+  t1.setSmooth(true);
+  t2.setSmooth(true);
+
+  Sprite sBackground(t2);
+
+  Animation sExplosion(t3, 0, 0, 256, 256, 48, 0.5);
+  Animation sRock(t4, 0, 0, 64, 64, 16, 0.2);
+  Animation sRock_small(t6, 0, 0, 64, 64, 16, 0.2);
+  Animation sBullet(t5, 0, 0, 32, 64, 16, 0.8);
+  Animation sPlayer(t1, 40, 0, 40, 40, 1, 0);
+  Animation sPlayer_go(t1, 40, 40, 40, 40, 1, 0);
+
+  std::list<Entity *> entities;
+
+  for (int i = 0; i < 15; i++)
+  {
+    asteroid *a = new asteroid();
+    a->settings(sRock, rand() % W, rand() % H, rand() % 360, 25);
+    entities.push_back(a);
+  }
+
+  player *p = new player();
+  p->settings(sPlayer, 200, 200, 0, 20);
+  entities.push_back(p);
+
+  /////main loop/////
+  while (app.isOpen())
+  {
+    Event e;
+    while (app.pollEvent(e))
+    {
+      if (e.type == Event::Closed)
+        app.close();
+
+      if (e.type == Event::KeyPressed)
+        if (e.key.code == Keyboard::Space)
+        {
+          bullet *b = new bullet();
+          b->settings(sBullet, p->x, p->y, p->angle, 10);
+          entities.push_back(b);
+        }
+    }
+
+    if (e.key.code == Keyboard::Right)
+      p->angle += 3;
+    if (e.key.code == Keyboard::Left)
+      p->angle -= 3;
+    if (e.key.code == Keyboard::Up)
+      p->thrust = true;
+    else
+      p->thrust = false;
+
+    for (auto a : entities)
+      for (auto b : entities)
+        if (a->name == "asteroid" && b->name == "bullet")
+          if (isCollide(a, b))
+          {
+            a->life = false;
+            b->life = false;
+
+            Entity *e = new Entity();
+            e->settings(sExplosion, a->x, a->y);
+            e->name = "explosion";
+            entities.push_back(e);
+
+            for (int i = 0; i < 2; i++)
+            {
+              if (a->R == 15)
+                continue;
+              Entity *e = new asteroid();
+              e->settings(sRock_small, a->x, a->y, rand() % 360, 15);
+              entities.push_back(e);
+            }
+          }
+
+    if (p->thrust)
+      p->anim = sPlayer_go;
+    else
+      p->anim = sPlayer;
+
+    for (auto e : entities)
+      if (e->name == "explosion")
+        if (e->anim.isEnd())
+          e->life = 0;
+
+    if (rand() % 150 == 0)
+    {
+      asteroid *a = new asteroid();
+      a->settings(sRock, 0, rand() % H, rand() % 360, 25);
+      entities.push_back(a);
+    }
 
     for (auto i = entities.begin(); i != entities.end();)
     {
@@ -259,11 +307,8 @@ int main()
         i++;
     }
 
-    sRock.update();
     //////draw//////
-    app.clear();
     app.draw(sBackground);
-    app.draw(sPlayer);
     for (auto i : entities)
       i->draw(app);
     app.display();
