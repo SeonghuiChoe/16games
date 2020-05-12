@@ -191,13 +191,14 @@ int main()
   RenderWindow app(VideoMode(W, H), "Asteroids!");
   app.setFramerateLimit(60);
 
-  Texture t1, t2, t3, t4, t5, t6;
+  Texture t1, t2, t3, t4, t5, t6, t7;
   t1.loadFromFile("images/spaceship.png");
   t2.loadFromFile("images/background.jpg");
   t3.loadFromFile("images/explosions/type_C.png");
   t4.loadFromFile("images/rock.png");
   t5.loadFromFile("images/fire_blue.png");
   t6.loadFromFile("images/rock_small.png");
+  t7.loadFromFile("images/explosions/type_B.png");
 
   t1.setSmooth(true);
   t2.setSmooth(true);
@@ -210,6 +211,7 @@ int main()
   Animation sBullet(t5, 0, 0, 32, 64, 16, 0.8);
   Animation sPlayer(t1, 40, 0, 40, 40, 1, 0);
   Animation sPlayer_go(t1, 40, 40, 40, 40, 1, 0);
+  Animation sExplosion_ship(t7, 0, 0, 192, 192, 64, 0.5);
 
   std::list<Entity *> entities;
 
@@ -253,6 +255,7 @@ int main()
 
     for (auto a : entities)
       for (auto b : entities)
+      {
         if (a->name == "asteroid" && b->name == "bullet")
           if (isCollide(a, b))
           {
@@ -273,6 +276,22 @@ int main()
               entities.push_back(e);
             }
           }
+
+        if (a->name == "player" && b->name == "asteroid")
+          if (isCollide(a, b))
+          {
+            b->life = false;
+
+            Entity *e = new Entity();
+            e->settings(sExplosion_ship, a->x, a->y);
+            e->name = "explosion";
+            entities.push_back(e);
+
+            p->settings(sPlayer, W / 2, H / 2, 0, 20);
+            p->dx = 0;
+            p->dy = 0;
+          }
+      }
 
     if (p->thrust)
       p->anim = sPlayer_go;
